@@ -11,6 +11,7 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 //jwt middleware
 app.use((req, res, next) => {
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
     res.send("Hello Welcome to my tour API!");
 });
 
-app.listen(config.port, () => {
-    console.log(`Server is running on ${config.port}`);
+app.listen(config.port || 8081, () => {
+    console.log("Server is running ");
 });
 
