@@ -8,10 +8,10 @@ import cors from 'cors'
 
 const app = express();
 
-app.use(cors());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(cors());
 
 //jwt middleware
 app.use((req, res, next) => {
