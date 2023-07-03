@@ -106,7 +106,7 @@ export const login = async (req, res) => {
   const user = result.recordset[0];
   if (!user) {
     return res.status(401).json({ error: 'Invalid Name or Password' });
-  } else {
+  } else if (user){
     const isPasswordValid = await bcrypt.compare(Password, user.Password);
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Invalid Name or Password' });
