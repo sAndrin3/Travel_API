@@ -104,7 +104,7 @@ export const login = async (req, res) => {
     .input('Name', sql.VarChar, Name)
     .query('SELECT * FROM Users WHERE Name = @Name');
   const user = result.recordset[0];
-  if (!user) {
+  if (!user&&!admin) {
     return res.status(401).json({ error: 'Invalid Name or Password' });
   } else if (user){
     const isPasswordValid = await bcrypt.compare(Password, user.Password);
