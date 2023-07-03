@@ -42,7 +42,7 @@ export const register = async (req, res) => {
       .query('SELECT * FROM users WHERE Name = @Name OR Email = @Email');
     const user = result.recordset[0];
     if (user) {
-      res.status(409).json({ error: 'User already exists' });
+      return res.status(409).json({ error: 'User already exists' });
     } else {
       await pool
         .request()
@@ -53,7 +53,7 @@ export const register = async (req, res) => {
         .query(
           'INSERT INTO users (Name, Password, Email, ContactNumber) VALUES (@Name, @hashedpassword, @Email, @ContactNumber)'
         );
-      res.status(200).send({ message: 'User created successfully' });
+      return res.status(200).send({ message: 'User created successfully' });
     }
   } catch (error) {
     res.status(500).json(error.message);
@@ -76,7 +76,7 @@ export const registerAdmin = async (req, res) => {
       .query('SELECT * FROM Admins WHERE Name = @Name OR Email = @Email');
     const user = result.recordset[0];
     if (user) {
-      res.status(409).json({ error: 'Admin already exists' });
+      return res.status(409).json({ error: 'Admin already exists' });
     } else {
       await pool
         .request()
@@ -105,11 +105,11 @@ export const login = async (req, res) => {
     .query('SELECT * FROM Users WHERE Name = @Name');
   const user = result.recordset[0];
   if (!user) {
-    res.status(401).json({ error: 'Invalid Name or Password' });
+    return res.status(401).json({ error: 'Invalid Name or Password' });
   } else {
     const isPasswordValid = await bcrypt.compare(Password, user.Password);
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid Name or Password' });
+      return res.status(401).json({ error: 'Invalid Name or Password' });
     } else {
       const token = `JWT ${jwt.sign(
         { id: user.ID, Name: user.Name, Email: user.Email },
@@ -133,10 +133,10 @@ export const adminLogin = async (req, res) => {
       .query('SELECT * FROM Admins WHERE Name = @Name');
     const admin = result.recordset[0];
     if (!admin) {
-      res.status(401).json({ message: 'Invalid name or password' });
+      return res.status(401).json({ message: 'Invalid name or password' });
     } else {
       if (!bcrypt.compareSync(Password, admin.Password)) {
-        res.status(401).json({ error: 'Invalid Name or Password' });
+        return res.status(401).json({ error: 'Invalid Name or Password' });
       } else {
         const token = `JWT ${jwt.sign(
           { Name: admin.Name, Email: admin.Email },
@@ -146,7 +146,7 @@ export const adminLogin = async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   } finally {
     sql.close();
   }
