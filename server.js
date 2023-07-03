@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
     res.send("Hello Welcome to my tour API!");
 });
 
-app.listen(config.port || 8081, () => {
+app.listen(config.port || 5000, () => {
     console.log("Server is running ");
 });
 
